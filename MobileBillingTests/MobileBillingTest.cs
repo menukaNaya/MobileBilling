@@ -11,7 +11,7 @@ namespace MobileBillingTests
     public class MobileBillingTest
     {
         [Test]
-        public void OnSort_WithOnlyNegativeNumberList_ShouldReturnAccendinlySortedNumberList()
+        public void Gebereate()
         {
             Assert.Inconclusive();
         }
