@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace MobileBilling
 {
-    class BillingEngine
+    public class BillingEngine : Customer
     {
-        public long _phoneNumber { get; set; }
-        public string _billingAddress { get; set; }
-        public double _totalCallCharges { get; set; }
-        public double _toatalDiscount { get; set; }
-        public double _tax { get; set; }
-        public long _rental { get; set; }
+        
+        private double _totalCallCharges { get; set; }
+        private double _toatalDiscount { get; set; }
+        private double _tax { get; set; }
+        private long _rental { get; set; }
     }
 }

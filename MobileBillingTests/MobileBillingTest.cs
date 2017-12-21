@@ -11,7 +11,7 @@ namespace MobileBillingTests
     public class MobileBillingTest
     {
         [Test]
-        public void Genereate()
+        public void Genereate_()
         {
             Assert.Inconclusive();
         }
