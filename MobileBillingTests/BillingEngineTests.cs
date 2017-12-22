@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace MobileBillingTests
 {
     [TestFixture]
-    public class MobileBillingTest
+    public class BillingEngineTests
     {
         [Test]
         public void Genereate_()

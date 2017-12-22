@@ -43,11 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MobileBillingTest.cs" />
+    <Compile Include="CDRTests.cs" />
+    <Compile Include="BillingEngineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MobileBilling\MobileBilling.csproj">
+      <Project>{ea10bf8b-4459-46db-bb64-f9b8b1601c7f}</Project>
+      <Name>MobileBilling</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
