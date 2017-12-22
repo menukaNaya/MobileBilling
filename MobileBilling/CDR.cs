@@ -4,10 +4,10 @@ namespace MobileBilling
 {
     public class CDR
     {
-        private long _callingPartyNumber { get; }
-        private long _calledPartyNumber { get; }
-        private DateTime _startingTimeOfTheCall { get; }
-        private double _callDurationInSeconds { get; }
+        private long _callingPartyNumber;
+        private long _calledPartyNumber;
+        private DateTime _startingTimeOfTheCall;
+        private double _callDurationInSeconds;
 
         public CDR(long callingPartyNumber, long calledPartyNumber, DateTime startingTimeOfTheCall, double callDurationInSeconds)
         {
@@ -26,10 +26,27 @@ namespace MobileBilling
                 throw new Exception( "Calling party number and Called party number can't be same!");
             }
 
-            this._callingPartyNumber = callingPartyNumber;
-            this._calledPartyNumber = calledPartyNumber;
-            this._startingTimeOfTheCall = startingTimeOfTheCall;
-            this._callDurationInSeconds = callDurationInSeconds;
+            _callingPartyNumber = callingPartyNumber;
+            _calledPartyNumber = calledPartyNumber;
+            _startingTimeOfTheCall = startingTimeOfTheCall;
+            _callDurationInSeconds = callDurationInSeconds;
+        }
+
+        public long callingPartyNumber
+        {
+            get { return _callingPartyNumber; }
+        }
+        public long calledPartyNumber
+        {
+            get { return _calledPartyNumber; }
+        }
+        public DateTime startingTimeOfTheCall
+        {
+            get { return _startingTimeOfTheCall; }
+        }
+        public double callDurationInSeconds
+        {
+            get { return _callDurationInSeconds; }
         }
 
     }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace MobileBillingTests
 {
@@ -11,7 +6,7 @@ namespace MobileBillingTests
     public class BillingEngineTests
     {
         [Test]
-        public void Genereate_()
+        public void Genereate_WhenGivingOneCustomerAndOneCDR_ShouldReturnTheBill()
         {
             Assert.Inconclusive();
         }
