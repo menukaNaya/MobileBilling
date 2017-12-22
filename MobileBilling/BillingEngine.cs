@@ -19,7 +19,7 @@ namespace MobileBilling
         {
             foreach (Customer customer in customers)
             {
-                billList.Add(customer.phoneNumber,new Bill(customer.fullName, customer.phoneNumber, customer.billingAddress));
+                billList.Add(customer.phoneNumber,new Bill(customer));
             }
 
             foreach (CDR cdr in listOfCDRs)

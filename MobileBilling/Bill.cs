@@ -8,9 +8,7 @@ namespace MobileBilling
 {
     public class Bill
     {
-        private string _fullName { get; set; }
-        private long _phoneNumber { get; set; }
-        private string _billingAddress { get; set; }
+        private Customer customer;
         private double _totalCallCharges { get; set; }
         private double _toatalDiscount { get; set; }
         private double _tax { get; set; }
@@ -19,11 +17,9 @@ namespace MobileBilling
         private List<CDR> ListOfCallDetails;
 
 
-        public Bill(string fullName, long phoneNumber, string billingAddress)
+        public Bill(Customer customer)
         {
-            _fullName = fullName;
-            _phoneNumber = phoneNumber;
-            _billingAddress = billingAddress;
+            this.customer = customer;
             ListOfCallDetails = new List<CDR>();
         }
 
