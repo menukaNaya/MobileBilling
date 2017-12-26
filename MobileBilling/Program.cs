@@ -10,17 +10,20 @@ namespace MobileBilling
     {
         static void Main(string[] args)
         {
-            //long num = 9711535724;
-            //Console.WriteLine(num);
-            //Console.WriteLine(num / 10000000);
-            //Console.WriteLine(num % 10000000);
-            DateTime me = new DateTime(2004, 5, 27, 0, 0, 0);
+            
+            BillingEngine _sut;
+            List<CDR> listOfCallDetails = new List<CDR>();
+            List<Customer> listOfCustomers = new List<Customer>();
 
-            //CDR ne = new CDR(-5, 0808018203, me, 23423.234);
+            Customer customerForTest = new Customer("Menuka Nayanadeepa", 0711535724, "Pallekekulawala, Nawathalwaththa.", new DateTime(2010, 5, 27, 10, 0, 0));
+            CDR cdrForTest = new CDR(0711535724, 0711593911, new DateTime(2017, 12, 23, 9, 0, 0), 123.5);
+            CDR cdrForTest1 = new CDR(0711535724, 0711593911, new DateTime(2017, 12, 23, 9, 0, 0), 58);
 
-            Customer n = new Customer("Menuka Nayanadeepa", 0711535724, "Pllaekekulawala, Nawathalwaththa", me);
-            //n.fullName = "Weerasooriya";
-            //Console.WriteLine(n.fullName);
+            listOfCallDetails.Add(cdrForTest);
+            listOfCallDetails.Add(cdrForTest1);
+            listOfCustomers.Add(customerForTest);
+            _sut = new BillingEngine(listOfCustomers);
+            _sut.Generate(listOfCallDetails);
         }
     }
 }

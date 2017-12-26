@@ -8,12 +8,24 @@ namespace MobileBillingTests
     [TestFixture]
     public class CDRTests
     {
-        //private CDR _sut;
+        private CDR _sut;
         DateTime date = new DateTime(2004, 5, 27, 0, 0, 0);
 
         [SetUp]
         public void Init()
         {
+            _sut = new CDR(0711535724, 0711593911, date, 65);
+        }
+
+        [Test]
+        public void CDRConstructor_WhenGivingValidPhoneNumbersAndValidCallDuration_ShouldThrowAnException()
+        {
+
+            Assert.AreEqual(0711535724, _sut.callingPartyNumber);
+            Assert.AreEqual(0711593911, _sut.calledPartyNumber);
+            Assert.AreEqual(date, _sut.startingTimeOfTheCall);
+            Assert.AreEqual(65, _sut.callDurationInSeconds);
+
         }
 
         [Test]

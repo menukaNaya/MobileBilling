@@ -6,21 +6,29 @@ using System.Threading.Tasks;
 
 namespace MobileBilling
 {
-    class BillingEngine
+    public class BillingEngine
     {
         private Dictionary<long, Bill> billList;
 
-        public BillingEngine()
+        public BillingEngine(List<Customer> customers)
         {
             billList = new Dictionary<long, Bill>();
-        }
-
-        public void Generate(List<Customer> customers, List<CDR> listOfCDRs)
-        {
             foreach (Customer customer in customers)
             {
-                billList.Add(customer.phoneNumber,new Bill(customer));
+                if (billList.ContainsKey(customer.phoneNumber))
+                {
+                    continue;
+                }
+                else
+                {
+                    billList.Add(customer.phoneNumber, new Bill(customer));
+                }
             }
+        }
+
+        public void Generate(List<CDR> listOfCDRs)
+        {
+            
 
             foreach (CDR cdr in listOfCDRs)
             {
@@ -37,8 +45,20 @@ namespace MobileBilling
             foreach (var pair in billList)
             {
                 (pair.Value).CalculateTheBill();
+                Console.WriteLine((pair.Value).printThebill());
             }
-            
+        }
+
+        public Bill getTheBill(long phoneNumber)
+        {
+            if (billList.ContainsKey(phoneNumber))
+            {
+                return billList[phoneNumber];
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(phoneNumber), "This customer is not registered!");
+            }
         }
     }
 }
