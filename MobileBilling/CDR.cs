@@ -43,6 +43,7 @@ namespace MobileBilling
         public DateTime startingTimeOfTheCall
         {
             get { return _startingTimeOfTheCall; }
+            set { _startingTimeOfTheCall = value; }
         }
         public double callDurationInSeconds
         {

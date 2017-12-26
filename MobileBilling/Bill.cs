@@ -56,16 +56,45 @@ namespace MobileBilling
                 {
                     totalMiniutes++;
                 }
-
-                //Console.WriteLine(totalMiniutes);
-
-                if((cdr.startingTimeOfTheCall.Hour) >= 8 && (cdr.startingTimeOfTheCall.Hour < 16))
+                Console.WriteLine(totalMiniutes);
+                for(int i = 0;i < totalMiniutes; i++)
                 {
-                    this._totalCallCharges += totalMiniutes * this._peakHoursLocalPerMiniuteCharge;
+                    if ((int)(cdr.calledPartyNumber / 10000000) == (int)(cdr.callingPartyNumber / 10000000))
+                    {
+                        // Calculating Tatal Call Charges For Peak Hours Local Calls...
+                        if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
+                        {
+                            this._totalCallCharges += this._peakHoursLocalPerMiniuteCharge;
+                            Console.WriteLine("In here");
+                            Console.WriteLine(i + " " + this._totalCallCharges);
+                        }
+
+                        // Calculating Tatal Call Charges For Off Peak Hours Local Calls...
+                        if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
+                        {
+                            this._totalCallCharges += this._offPeakHoursLocalPerMiniuteCharge;
+                            Console.WriteLine(i + " " + this._totalCallCharges);
+                        }
+                    }
+                    else
+                    {
+                        // Calculating Tatal Call Charges For Peak Hours Long Distance Calls...
+                        if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
+                        {
+                            this._totalCallCharges += this._peakHoursLongDistancePerMiniuteCharge;
+                        }
+
+                        // Calculating Tatal Call Charges For Off Peak Hours Long Distance Calls...
+                        if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
+                        {
+                            this._totalCallCharges += this._offPeakHoursLongDistancePerMiniuteCharge;
+                            //Console.WriteLine(this._totalCallCharges);
+                        }
+                    }
+
+                    //Incresing the time by miniute, to find the correct time period for charging...
+                    cdr.startingTimeOfTheCall = cdr.startingTimeOfTheCall.AddMinutes(1);
                 }
-
-                //Console.WriteLine(this._totalCallCharges);
-
             }
 
             this._tax = (this._totalCallCharges + this._rental) * this._taxPercentage / 100;
