@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MobileBilling
 {
@@ -26,6 +22,7 @@ namespace MobileBilling
         {
             this.customer = customer;
             this._taxPercentage = 20;
+            this._toatalDiscount = 0;
             this._peakHoursLocalPerMiniuteCharge = 3;
             this._offPeakHoursLocalPerMiniuteCharge = 2;
             this._peakHoursLongDistancePerMiniuteCharge = 5;
@@ -33,12 +30,14 @@ namespace MobileBilling
             this._rental = 100;
             listOfCallDetails = new List<CDR>();
         }
-
-        public Bill(Customer customer, double taxPercentage, double rental)
+        
+        //For special cases...
+        public Bill(Customer customer, double taxPercentage, double rental, double totalDiscount)
         {
             this.customer = customer;
             this._taxPercentage = taxPercentage;
             this._rental = rental;
+            this._toatalDiscount = totalDiscount;
             listOfCallDetails = new List<CDR>();
         }
 
@@ -51,29 +50,32 @@ namespace MobileBilling
         {
             foreach (CDR cdr in listOfCallDetails)
             {
+                //Finding number of mins to add...
                 int totalMiniutes = (int) (cdr.callDurationInSeconds / 60);
+
+                //Adding extra min for extra seconds...
                 if(cdr.callDurationInSeconds % 60 > 0)
                 {
                     totalMiniutes++;
                 }
-                Console.WriteLine(totalMiniutes);
+
+                //Calculating Total Call Charges...
                 for(int i = 0;i < totalMiniutes; i++)
                 {
+                    //Finding whethter the call is a long sitance call or a local one...
+                    //If it's a local one...
                     if ((int)(cdr.calledPartyNumber / 10000000) == (int)(cdr.callingPartyNumber / 10000000))
                     {
                         // Calculating Tatal Call Charges For Peak Hours Local Calls...
                         if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
                         {
                             this._totalCallCharges += this._peakHoursLocalPerMiniuteCharge;
-                            Console.WriteLine("In here");
-                            Console.WriteLine(i + " " + this._totalCallCharges);
                         }
 
                         // Calculating Tatal Call Charges For Off Peak Hours Local Calls...
                         if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
                         {
                             this._totalCallCharges += this._offPeakHoursLocalPerMiniuteCharge;
-                            Console.WriteLine(i + " " + this._totalCallCharges);
                         }
                     }
                     else
@@ -88,7 +90,6 @@ namespace MobileBilling
                         if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
                         {
                             this._totalCallCharges += this._offPeakHoursLongDistancePerMiniuteCharge;
-                            //Console.WriteLine(this._totalCallCharges);
                         }
                     }
 
@@ -108,6 +109,7 @@ namespace MobileBilling
             get { return _billAmount; }
         }
 
+        //For printing purposes...
         public string printThebill()
         {
             return "Customer Name: " + customer.fullName +
