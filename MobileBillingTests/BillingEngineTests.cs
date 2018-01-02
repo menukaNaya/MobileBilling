@@ -26,6 +26,7 @@ namespace MobileBillingTests
             Customer customerForTest6 = new Customer("FirstName SecondName", 0711593916, "Address1, Address2.", new DateTime(2010, 5, 27, 10, 0, 0), 'A');
             Customer customerForTest7 = new Customer("FirstName SecondName", 0711593917, "Address1, Address2.", new DateTime(2010, 5, 27, 10, 0, 0), 'A');
             Customer customerForTest8 = new Customer("FirstName SecondName", 0711535725, "Address1, Address2.", new DateTime(2010, 5, 27, 10, 0, 0), 'B');
+            Customer customerForTest9 = new Customer("FirstName SecondName", 0711535726, "Address1, Address2.", new DateTime(2010, 5, 27, 10, 0, 0), 'B');
 
             listOfCustomers.Add(customerForTest);
             listOfCustomers.Add(customerForTest1);
@@ -36,6 +37,7 @@ namespace MobileBillingTests
             listOfCustomers.Add(customerForTest6);
             listOfCustomers.Add(customerForTest7);
             listOfCustomers.Add(customerForTest8);
+            listOfCustomers.Add(customerForTest9);
 
             _sut = new BillingEngine(listOfCustomers);
         }
@@ -192,6 +194,7 @@ namespace MobileBillingTests
             Assert.AreEqual(expected, _sut.getTheBill(0711593917).printThebill());
         }
 
+        //Plan B Tests starting form here...
         [Test]
         public void Genereate_WhenGivingPackageBCustomerAndOneCDRWihtLocalCallInPeakHoursLessThanAMiniuteCallDuration_ShouldReturnTheBill()
         {
@@ -209,6 +212,25 @@ namespace MobileBillingTests
 
             // Assert
             Assert.AreEqual(expected, _sut.getTheBill(711535725).printThebill());
+        }
+
+        [Test]
+        public void Genereate_WhenGivingPackageBCustomerAndOneCDRWihtLongDistanceCallInOffPeakHoursMoreThanAMiniuteCallDuration_ShouldReturnTheBill()
+        {
+            // Arrange
+            CDR cdrForTest = new CDR(0711535726, 0721535724, new DateTime(2017, 12, 23, 21, 0, 0), 245);
+            listOfCallDetails.Add(cdrForTest);
+
+            string expected = "Customer Name: FirstName SecondName" +
+                "\nPhone number: 711535726" +
+                "\nAddress: Address1, Address2." +
+                "\nTotal Amount to Pay: LKR: 144.5";
+
+            // Act
+            _sut.Generate(listOfCallDetails);
+
+            // Assert
+            Assert.AreEqual(expected, _sut.getTheBill(711535726).printThebill());
         }
     }
 }
