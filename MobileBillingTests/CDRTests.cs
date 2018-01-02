@@ -44,7 +44,6 @@ namespace MobileBillingTests
         public void CDRConstructor_WhenTheCallingNumberAndCalledNumberIsSame_ShouldThrowAnException()
         {
             Assert.Throws<Exception>(() => new CDR(0711535724, 0711535724, date, 55));
-            //Assert.Inconclusive();
         }
 
     }

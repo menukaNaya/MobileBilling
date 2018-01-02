@@ -7,15 +7,16 @@ namespace MobileBilling
         private string _fullName;
         private long _phoneNumber;
         private string _billingAddress;
-        private int _packageCode;
+        private char _packageCode;
         private DateTime _registeredDate;
 
-        public Customer(string fullName, long phoneNumber, string billingAddress, DateTime registeredDate)
+        public Customer(string fullName, long phoneNumber, string billingAddress, DateTime registeredDate, char packageCode)
         {
             this._fullName = fullName;
             _phoneNumber = phoneNumber;
             _billingAddress = billingAddress;
             _registeredDate = registeredDate;
+            _packageCode = packageCode;
         }
 
         public string fullName
@@ -36,7 +37,7 @@ namespace MobileBilling
             set { _billingAddress = value; }
         }
 
-        public int packageCode
+        public char packageCode
         {
             get { return _packageCode; }
             set { _packageCode = value; }

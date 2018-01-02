@@ -46,6 +46,8 @@
     <Compile Include="BillingEngine.cs" />
     <Compile Include="CDR.cs" />
     <Compile Include="Customer.cs" />
+    <Compile Include="PerMinuteBill.cs" />
+    <Compile Include="PerSecondBill.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
