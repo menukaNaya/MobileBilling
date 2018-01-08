@@ -24,63 +24,32 @@ namespace MobileBilling
             this._toatalDiscount = 0;
 
         }
+        
+        public PerMinuteBill(Customer customer, double peakHoursLocalPerMiniuteCharge, double peakHoursLongDistancePerMiniuteCharge, double offPeakHoursLocalPerMiniuteCharge, double offPeakHoursLongDistancePerMiniuteCharge, double monthlyRental) : base(customer)
+        {
+            this._peakHoursLocalPerMiniuteCharge = peakHoursLocalPerMiniuteCharge;
+            this._offPeakHoursLocalPerMiniuteCharge = offPeakHoursLocalPerMiniuteCharge;
+            this._peakHoursLongDistancePerMiniuteCharge = peakHoursLongDistancePerMiniuteCharge;
+            this._offPeakHoursLongDistancePerMiniuteCharge = offPeakHoursLongDistancePerMiniuteCharge;
+            this._monthlyRental = monthlyRental;
+            this._toatalDiscount = 0;
+        }
 
-        public void CalculateTheBill()
+        public override void CalculateTheBill()
         {
             foreach (CDR cdr in listOfCallDetails)
             {
-                //Finding number of mins to add...
-                int totalMinutes = (int)(cdr.callDurationInSeconds / 60);
-
-                //Adding extra min for extra seconds...
-                if (cdr.callDurationInSeconds % 60 > 0)
-                {
-                    totalMinutes++;
-                }
-
-                //Calculating Total Call Charges...
-                for (int i = 0; i < totalMinutes; i++)
-                {
-                    //Finding whethter the call is a long sitance call or a local one...
-                    //If it's a local one...
-                    if ((int)(cdr.calledPartyNumber / 10000000) == (int)(cdr.callingPartyNumber / 10000000))
-                    {
-                        // Calculating Tatal Call Charges For Peak Hours Local Calls...
-                        if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
-                        {
-                            this._totalCallCharges += this._peakHoursLocalPerMiniuteCharge;
-                        }
-
-                        // Calculating Tatal Call Charges For Off Peak Hours Local Calls...
-                        if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
-                        {
-                            this._totalCallCharges += this._offPeakHoursLocalPerMiniuteCharge;
-                        }
-                    }
-                    else
-                    {
-                        // Calculating Tatal Call Charges For Peak Hours Long Distance Calls...
-                        if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
-                        {
-                            this._totalCallCharges += this._peakHoursLongDistancePerMiniuteCharge;
-                        }
-
-                        // Calculating Tatal Call Charges For Off Peak Hours Long Distance Calls...
-                        if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
-                        {
-                            this._totalCallCharges += this._offPeakHoursLongDistancePerMiniuteCharge;
-                        }
-                    }
-
-                    //Increasing the time by minute, to find the correct time period for charging...
-                    cdr.startingTimeOfTheCall = cdr.startingTimeOfTheCall.AddMinutes(1);
-                }
+                CDR cdrInProcess = cdr;
+                CalculateTotalCallCharges(ref cdrInProcess, this._peakHoursLocalPerMiniuteCharge, this._offPeakHoursLocalPerMiniuteCharge, this._peakHoursLongDistancePerMiniuteCharge, this._offPeakHoursLongDistancePerMiniuteCharge, ref this._totalCallCharges, true);
             }
 
             this._tax = (this._totalCallCharges + this._monthlyRental) * taxPercentage / 100;
-            //Console.WriteLine(this._tax);
 
             billAmount =Math.Round((this._totalCallCharges + this._monthlyRental + this._tax - this._toatalDiscount), 2);
         }
+
+        
+
     }
 }
+

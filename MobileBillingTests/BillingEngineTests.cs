@@ -58,7 +58,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(711535724).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(711535724).PrintThebill());
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(0711593911).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(0711593911).PrintThebill());
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(0711593912).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(0711593912).PrintThebill());
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(0711593913).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(0711593913).PrintThebill());
         }
 
         [Test]
@@ -134,7 +134,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(0711593914).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(0711593914).PrintThebill());
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(0711593915).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(0711593915).PrintThebill());
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(0711593916).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(0711593916).PrintThebill());
         }
 
         [Test]
@@ -191,7 +191,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(0711593917).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(0711593917).PrintThebill());
         }
 
         //Plan B Tests starting form here...
@@ -211,7 +211,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(711535725).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(711535725).PrintThebill());
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace MobileBillingTests
             _sut.Generate(listOfCallDetails);
 
             // Assert
-            Assert.AreEqual(expected, _sut.getTheBill(711535726).printThebill());
+            Assert.AreEqual(expected, _sut.getTheBill(711535726).PrintThebill());
         }
     }
 }

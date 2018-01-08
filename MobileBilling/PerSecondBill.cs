@@ -15,88 +15,67 @@ namespace MobileBilling
 
         public PerSecondBill(Customer customer) : base(customer)
         {
-            this._peakHoursLocalPerSecondCharge = 4/60.0;
-            this._offPeakHoursLocalPerSecondCharge = 3/60.0;
-            this._peakHoursLongDistancePerSecondCharge = 6/60.0;
-            this._offPeakHoursLongDistancePerSecondCharge = 5/60.0;
+            this._peakHoursLocalPerSecondCharge = 4;
+            this._offPeakHoursLocalPerSecondCharge = 3;
+            this._peakHoursLongDistancePerSecondCharge = 6;
+            this._offPeakHoursLongDistancePerSecondCharge = 5;
             this._monthlyRental = 100;
             this._toatalDiscount = 0;
         }
 
-        public void CalculateTheBill()
+        public PerSecondBill(Customer customer, double peakHoursLocalPerSecondCharge, double peakHoursLongDistancePerSecondCharge, double offPeakHoursLocalPerSecondCharge, double offPeakHoursLongDistancePerSecondCharge, double monthlyRental) : base(customer)
+        {
+            this._peakHoursLocalPerSecondCharge = peakHoursLocalPerSecondCharge;
+            this._offPeakHoursLocalPerSecondCharge = offPeakHoursLocalPerSecondCharge;
+            this._peakHoursLongDistancePerSecondCharge = peakHoursLongDistancePerSecondCharge;
+            this._offPeakHoursLongDistancePerSecondCharge = offPeakHoursLongDistancePerSecondCharge;
+            this._monthlyRental = monthlyRental;
+            this._toatalDiscount = 0;
+        }
+
+        public override void CalculateTheBill()
         {
             foreach (CDR cdr in listOfCallDetails)
             {
-                //Finding number of mins to add...
-                int totalMinutes = (int)(cdr.callDurationInSeconds / 60);
+                CDR cdrInProcess = cdr;
 
-                //Calculating Total Call Charges...
-                for (int i = 0; i < totalMinutes; i++)
-                {
-                    //Finding whethter the call is a long sitance call or a local one...
-                    //If it's a local one...
-                    if ((int)(cdr.calledPartyNumber / 10000000) == (int)(cdr.callingPartyNumber / 10000000))
-                    {
-                        // Calculating Tatal Call Charges For Peak Hours Local Calls...
-                        if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
-                        {
-                            this._totalCallCharges += this._peakHoursLocalPerSecondCharge * 60;
-                        }
+                CalculateTotalCallCharges(ref cdrInProcess, this._peakHoursLocalPerSecondCharge, this._offPeakHoursLocalPerSecondCharge, this._peakHoursLongDistancePerSecondCharge, this._offPeakHoursLongDistancePerSecondCharge, ref this._totalCallCharges, false);
 
-                        // Calculating Tatal Call Charges For Off Peak Hours Local Calls...
-                        if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
-                        {
-                            this._totalCallCharges += this._offPeakHoursLocalPerSecondCharge * 60;
-                        }
-                    }
-                    else
-                    {
-                        // Calculating Tatal Call Charges For Peak Hours Long Distance Calls...
-                        if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
-                        {
-                            this._totalCallCharges += this._peakHoursLongDistancePerSecondCharge * 60;
-                        }
+                bool itIsALocalCall = ((int)(cdr.calledPartyNumber / 10000000) == (int)(cdr.callingPartyNumber / 10000000));
+                bool itIsALongDistanceCall = ((int)(cdr.calledPartyNumber / 10000000) != (int)(cdr.callingPartyNumber / 10000000));
 
-                        // Calculating Tatal Call Charges For Off Peak Hours Long Distance Calls...
-                        if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
-                        {
-                            this._totalCallCharges += this._offPeakHoursLongDistancePerSecondCharge * 60;
-                        }
-                    }
-
-                    //Increasing the time by minute, to find the correct time period for charging...
-                    cdr.startingTimeOfTheCall = cdr.startingTimeOfTheCall.AddMinutes(1);
-                }
+                bool inOffPeakTime = (((cdrInProcess.startingTimeOfTheCall.Hour < 8) && (cdrInProcess.startingTimeOfTheCall.Hour >= 0)) || ((cdrInProcess.startingTimeOfTheCall.Hour >= 20) && (cdrInProcess.startingTimeOfTheCall.Hour <= 24)));
+                bool inPeakTime = ((cdrInProcess.startingTimeOfTheCall.Hour >= 8) && (cdrInProcess.startingTimeOfTheCall.Hour < 20));
 
                 //Adding the cost for extra seconds...
                 if (cdr.callDurationInSeconds % 60 > 0)
                 {
-                    if ((int)(cdr.calledPartyNumber / 10000000) == (int)(cdr.callingPartyNumber / 10000000))
+                    if (itIsALocalCall)
                     {
                         // Calculating Tatal Call Charges For Peak Hours Local Calls...
-                        if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
+                        if (inPeakTime)
                         {
-                            this._totalCallCharges += this._peakHoursLocalPerSecondCharge * (cdr.callDurationInSeconds % 60);
+                            this._totalCallCharges += this._peakHoursLocalPerSecondCharge / 60.0 * (cdrInProcess.callDurationInSeconds % 60);
                         }
 
                         // Calculating Tatal Call Charges For Off Peak Hours Local Calls...
-                        if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
+                        if (inOffPeakTime)
                         {
-                            this._totalCallCharges += this._offPeakHoursLocalPerSecondCharge * (cdr.callDurationInSeconds % 60);
+                            this._totalCallCharges += this._offPeakHoursLocalPerSecondCharge / 60.0 * (cdrInProcess.callDurationInSeconds % 60);
                         }
                     }
-                    else
+                    else if (itIsALongDistanceCall)
                     {
                         // Calculating Tatal Call Charges For Peak Hours Long Distance Calls...
-                        if ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour) < 20)
+                        if (inPeakTime)
                         {
-                            this._totalCallCharges += this._peakHoursLongDistancePerSecondCharge * (cdr.callDurationInSeconds % 60);
+                            this._totalCallCharges += this._peakHoursLongDistancePerSecondCharge / 60.0 * (cdrInProcess.callDurationInSeconds % 60);
                         }
 
                         // Calculating Tatal Call Charges For Off Peak Hours Long Distance Calls...
-                        if (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)))
+                        if (inOffPeakTime)
                         {
-                            this._totalCallCharges += this._offPeakHoursLongDistancePerSecondCharge * (cdr.callDurationInSeconds % 60);
+                            this._totalCallCharges += this._offPeakHoursLongDistancePerSecondCharge / 60.0 * (cdrInProcess.callDurationInSeconds % 60);
                         }
                     }
                 }

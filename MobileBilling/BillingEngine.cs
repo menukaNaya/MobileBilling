@@ -5,19 +5,17 @@ namespace MobileBilling
 {
     public class BillingEngine
     {
-        private Dictionary<long, PerMinuteBill> perMinuteBillList;
-        private Dictionary<long, PerSecondBill> perSecondBillList;
+        private Dictionary<long, Bill> BillList;
 
         //Addiiing customers to the Bill list...
         public BillingEngine(List<Customer> customers)
         {
-            perMinuteBillList = new Dictionary<long, PerMinuteBill>();
-            perSecondBillList = new Dictionary<long, PerSecondBill>();
-
+            BillList = new Dictionary<long, Bill>();
+            //perSecondBillList = new Dictionary<long, PerSecondBill>();
             foreach (Customer customer in customers)
             {
                 //If the customer is already registered just continue...
-                if (perMinuteBillList.ContainsKey(customer.phoneNumber) || perSecondBillList.ContainsKey(customer.phoneNumber))
+                if (BillList.ContainsKey(customer.phoneNumber))
                 {
                     continue;
                 }
@@ -26,13 +24,20 @@ namespace MobileBilling
                     //Otherwise adding the customer to the list...
                     if (customer.packageCode == 'A')
                     {
-                        perMinuteBillList.Add(customer.phoneNumber, new PerMinuteBill(customer));
+                        BillList.Add(customer.phoneNumber, new PerMinuteBill(customer, 3, 5, 2, 4, 100));
                     }
                     else if (customer.packageCode == 'B')
                     {
-                        perSecondBillList.Add(customer.phoneNumber, new PerSecondBill(customer));
+                        BillList.Add(customer.phoneNumber, new PerSecondBill(customer, 4, 6, 3, 5, 100));
                     }
-
+                    else if (customer.packageCode == 'C')
+                    {
+                        BillList.Add(customer.phoneNumber, new PerMinuteBill(customer, 2, 3, 1, 2, 300));
+                    }
+                    else if (customer.packageCode == 'D')
+                    {
+                        BillList.Add(customer.phoneNumber, new PerSecondBill(customer, 3, 5, 2, 4, 300));
+                    }
                 }
             }
         }
@@ -42,13 +47,9 @@ namespace MobileBilling
             foreach (CDR cdr in listOfCDRs)
             {
                 //Adding the CDRs to there specific customer...
-                if (perMinuteBillList.ContainsKey(cdr.callingPartyNumber))
+                if (BillList.ContainsKey(cdr.callingPartyNumber))
                 {
-                    perMinuteBillList[cdr.callingPartyNumber].AddCDRToList(cdr);
-                }
-                else if (perSecondBillList.ContainsKey(cdr.callingPartyNumber))
-                {
-                    perSecondBillList[cdr.callingPartyNumber].AddCDRToList(cdr);
+                    BillList[cdr.callingPartyNumber].AddCDRToList(cdr);
                 }
                 else
                 {
@@ -57,35 +58,23 @@ namespace MobileBilling
                 }
             }
 
-            foreach (var bill in perMinuteBillList.Values)
+            foreach (var bill in BillList.Values)
             {
                 //Calculating all bills of all customers...
                 bill.CalculateTheBill();
 
                 //Printing them all...
-                Console.WriteLine(bill.printThebill());
+                Console.WriteLine(bill.PrintThebill());
             }
 
-            foreach (var bill in perSecondBillList.Values)
-            {
-                //Calculating all bills of all customers...
-                bill.CalculateTheBill();
-
-                //Printing them all...
-                Console.WriteLine(bill.printThebill());
-            }
         }
 
         //This for getting each Customers bill seperately using customer mobile number...
         public Bill getTheBill(long phoneNumber)
         {
-            if (perMinuteBillList.ContainsKey(phoneNumber))
+            if (BillList.ContainsKey(phoneNumber))
             {
-                return perMinuteBillList[phoneNumber];
-            }
-            else if (perSecondBillList.ContainsKey(phoneNumber))
-            {
-                return perSecondBillList[phoneNumber];
+                return BillList[phoneNumber];
             }
             else
             {

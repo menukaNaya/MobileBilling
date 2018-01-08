@@ -31,7 +31,7 @@ namespace MobileBillingTests
         [Test]
         public void CDRConstructor_WhenGivingInvalidPhoneNumbers_ShouldThrowAnException()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new CDR(071153, -5, date, 23423.234));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CDR(071153, -5, date, 23423));
         }
 
         [Test]
