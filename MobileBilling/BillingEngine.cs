@@ -24,19 +24,19 @@ namespace MobileBilling
                     //Otherwise adding the customer to the list...
                     if (customer.packageCode == 'A')
                     {
-                        BillList.Add(customer.phoneNumber, new PerMinuteBill(customer, 3, 5, 2, 4, 100));
+                        BillList.Add(customer.phoneNumber, new PerMinuteBill(customer, 10, 18, 3, 5, 2, 4, 100));
                     }
                     else if (customer.packageCode == 'B')
                     {
-                        BillList.Add(customer.phoneNumber, new PerSecondBill(customer, 4, 6, 3, 5, 100));
+                        BillList.Add(customer.phoneNumber, new PerSecondBill(customer, 8, 20, 4, 6, 3, 5, 100));
                     }
                     else if (customer.packageCode == 'C')
                     {
-                        BillList.Add(customer.phoneNumber, new PerMinuteBill(customer, 2, 3, 1, 2, 300));
+                        BillList.Add(customer.phoneNumber, new PerMinuteBill(customer, 9, 18, 2, 3, 1, 2, 300));
                     }
                     else if (customer.packageCode == 'D')
                     {
-                        BillList.Add(customer.phoneNumber, new PerSecondBill(customer, 3, 5, 2, 4, 300));
+                        BillList.Add(customer.phoneNumber, new PerSecondBill(customer, 8, 20, 3, 5, 2, 4, 300));
                     }
                 }
             }

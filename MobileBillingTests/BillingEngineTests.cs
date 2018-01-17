@@ -46,7 +46,7 @@ namespace MobileBillingTests
         public void Genereate_WhenGivingPackageACustomerAndOneCDRWihtLocalCallInPeakHoursLessThanAMiniuteCallDuration_ShouldReturnTheBill()
         {
             // Arrange
-            CDR cdrForTest = new CDR(0711535724, 0711593911, new DateTime(2017, 12, 23, 9, 0, 0), 58);
+            CDR cdrForTest = new CDR(0711535724, 0711593911, new DateTime(2017, 12, 23, 11, 0, 0), 58);
             listOfCallDetails.Add(cdrForTest);
 
             string expected = "Customer Name: FirstName SecondName" +
@@ -65,7 +65,7 @@ namespace MobileBillingTests
         public void Genereate_WhenGivingPackageACustomerAndOneCDRWihtLocalCallInPeakHoursMoreThanAMiniuteCallDuration_ShouldReturnTheBill()
         {
             // Arrange
-            CDR cdrForTest = new CDR(0711593911, 0711535724, new DateTime(2017, 12, 23, 9, 0, 0), 123.5);
+            CDR cdrForTest = new CDR(0711593911, 0711535724, new DateTime(2017, 12, 23, 11, 0, 0), 123.5);
             listOfCallDetails.Add(cdrForTest);
 
             string expected = "Customer Name: FirstName SecondName" +
@@ -122,7 +122,7 @@ namespace MobileBillingTests
         public void Genereate_WhenGivingPackageACustomerAndOneCDRWihtLongDistanceCallInPeakHoursMoreThanAMiniuteCallDuration_ShouldReturnTheBill()
         {
             // Arrange
-            CDR cdrForTest = new CDR(0711593914, 0721535724, new DateTime(2017, 12, 23, 9, 0, 0), 128);
+            CDR cdrForTest = new CDR(0711593914, 0721535724, new DateTime(2017, 12, 23, 11, 0, 0), 128);
             listOfCallDetails.Add(cdrForTest);
 
             string expected = "Customer Name: FirstName SecondName" +
@@ -160,7 +160,7 @@ namespace MobileBillingTests
         public void Genereate_WhenGivingPackageACustomerAndOneCDRWihtLocalCallInBetweenOffPeakHoursAndPeakHours_ShouldReturnTheBill()
         {
             // Arrange
-            CDR cdrForTest = new CDR(0711593916, 0711535724, new DateTime(2017, 12, 23, 19, 59, 0), 185);
+            CDR cdrForTest = new CDR(0711593916, 0711535724, new DateTime(2017, 12, 23, 17, 59, 0), 185);
             listOfCallDetails.Add(cdrForTest);
 
             string expected = "Customer Name: FirstName SecondName" +
@@ -179,7 +179,7 @@ namespace MobileBillingTests
         public void Genereate_WhenGivingPackageACustomerAndOneCDRWihtLongDistanceCallInBetweenOffPeakHoursAndPeakHours_ShouldReturnTheBill()
         {
             // Arrange
-            CDR cdrForTest = new CDR(0711593917, 0721535724, new DateTime(2017, 12, 23, 19, 59, 0), 185);
+            CDR cdrForTest = new CDR(0711593917, 0721535724, new DateTime(2017, 12, 23, 17, 59, 0), 185);
             listOfCallDetails.Add(cdrForTest);
 
             string expected = "Customer Name: FirstName SecondName" +

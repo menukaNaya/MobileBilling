@@ -1,30 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MobileBilling
 {
     public class Bill
     {
-        private Customer customer;
+        private Customer _customer;
         private double _taxPercentage;
         private double _billAmount;
+        private int _startingHourOfPeakTime;
+        private int _startingHourOfOffPeakTime;
 
         private List<CDR> _listOfCallDetails;
 
 
-        public Bill(Customer customer)
+        public Bill(Customer customer, int startingHourOfPeakTime, int startingHourOfOffPeakTime)
         {
-            this.customer = customer;
+            this._customer = customer;
             this._taxPercentage = 20;
+            this._startingHourOfPeakTime = startingHourOfPeakTime;
+            this._startingHourOfOffPeakTime = startingHourOfOffPeakTime;
             this._listOfCallDetails = new List<CDR>();
         }
-
-        //For special cases...
-        public Bill(Customer customer, double taxPercentage, double totalDiscount)
-        {
-            this.customer = customer;
-            this._taxPercentage = taxPercentage;
-            this._listOfCallDetails = new List<CDR>();
-        }
+        //public Bill(Customer customer, Package customerPackage)
+        //{
+        //    this._customer = customer;
+        //    this._customerPackage = customerPackage;
+        //    this._taxPercentage = 20;
+        //    this._listOfCallDetails = new List<CDR>();
+        //}
 
         public virtual void CalculateTheBill()
         {
@@ -54,19 +58,34 @@ namespace MobileBilling
             get { return _taxPercentage; }
         }
 
+        public double startingHourOfPeakTime
+        {
+            get { return _startingHourOfPeakTime; }
+        }
+
+        public double startingHourOfOffPeakTime
+        {
+            get { return _startingHourOfOffPeakTime; }
+        }
+
+        public Customer customer
+        {
+            get { return _customer; }
+        }
+
         //For printing purposes...
         public string PrintThebill()
         {
-            return "Customer Name: " + customer.fullName +
-                "\nPhone number: " + customer.phoneNumber +
-                "\nAddress: " + customer.billingAddress +
+            return "Customer Name: " + _customer.fullName +
+                "\nPhone number: " + _customer.phoneNumber +
+                "\nAddress: " + _customer.billingAddress +
                 "\nTotal Amount to Pay: LKR: " + this._billAmount;
         }
 
         public int CalculateMinutesToAdd(double seconds)
         {
             int totalMinutes = (int)(seconds / 60);
-
+            
             //Adding extra min for extra seconds...
             if (seconds % 60 > 0)
             {
@@ -80,10 +99,11 @@ namespace MobileBilling
             bool itIsALocalCall = ((int)(cdr.calledPartyNumber / 10000000) == (int)(cdr.callingPartyNumber / 10000000));
             bool itIsALongDistanceCall = ((int)(cdr.calledPartyNumber / 10000000) != (int)(cdr.callingPartyNumber / 10000000));
 
-            bool inOffPeakTime = (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)));
-            bool inPeakTime = ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour < 20));
+            bool inOffPeakTime = (((cdr.startingTimeOfTheCall.Hour < _startingHourOfPeakTime) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= _startingHourOfOffPeakTime) && (cdr.startingTimeOfTheCall.Hour <= 24)));
+            bool inPeakTime = ((cdr.startingTimeOfTheCall.Hour >= _startingHourOfPeakTime) && (cdr.startingTimeOfTheCall.Hour < _startingHourOfOffPeakTime));
 
             int totalMinutes = 0;
+
 
             if (isPerMinute)
             {
@@ -132,10 +152,13 @@ namespace MobileBilling
                 }
                 //Increasing the time by minute, to find the correct time period for charging...
                 cdr.startingTimeOfTheCall = cdr.startingTimeOfTheCall.AddMinutes(1);
-                inOffPeakTime = (((cdr.startingTimeOfTheCall.Hour < 8) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= 20) && (cdr.startingTimeOfTheCall.Hour <= 24)));
-                inPeakTime = ((cdr.startingTimeOfTheCall.Hour >= 8) && (cdr.startingTimeOfTheCall.Hour < 20));
+                inOffPeakTime = (((cdr.startingTimeOfTheCall.Hour < _startingHourOfPeakTime) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= _startingHourOfOffPeakTime) && (cdr.startingTimeOfTheCall.Hour <= 24)));
+                inPeakTime = ((cdr.startingTimeOfTheCall.Hour >= _startingHourOfPeakTime) && (cdr.startingTimeOfTheCall.Hour < _startingHourOfOffPeakTime));
+
+
             }
         }
 
+        
     }
 }

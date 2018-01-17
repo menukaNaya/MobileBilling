@@ -12,25 +12,21 @@ namespace MobileBilling
         private double _toatalDiscount;
         private double _totalCallCharges;
         private double _tax;
+        private double _allSpecialOffersFromThePackage;
+        private double _discountPercentageOfPackageB;
+        private double _discountPercentageOfPackageD;
 
-        public PerSecondBill(Customer customer) : base(customer)
-        {
-            this._peakHoursLocalPerSecondCharge = 4;
-            this._offPeakHoursLocalPerSecondCharge = 3;
-            this._peakHoursLongDistancePerSecondCharge = 6;
-            this._offPeakHoursLongDistancePerSecondCharge = 5;
-            this._monthlyRental = 100;
-            this._toatalDiscount = 0;
-        }
+        
 
-        public PerSecondBill(Customer customer, double peakHoursLocalPerSecondCharge, double peakHoursLongDistancePerSecondCharge, double offPeakHoursLocalPerSecondCharge, double offPeakHoursLongDistancePerSecondCharge, double monthlyRental) : base(customer)
+        public PerSecondBill(Customer customer, int startingHourOfPeakTime, int startingHourOfOffPeakTime, double peakHoursLocalPerSecondCharge, double peakHoursLongDistancePerSecondCharge, double offPeakHoursLocalPerSecondCharge, double offPeakHoursLongDistancePerSecondCharge, double monthlyRental) : base(customer, startingHourOfPeakTime, startingHourOfOffPeakTime)
         {
             this._peakHoursLocalPerSecondCharge = peakHoursLocalPerSecondCharge;
             this._offPeakHoursLocalPerSecondCharge = offPeakHoursLocalPerSecondCharge;
             this._peakHoursLongDistancePerSecondCharge = peakHoursLongDistancePerSecondCharge;
             this._offPeakHoursLongDistancePerSecondCharge = offPeakHoursLongDistancePerSecondCharge;
             this._monthlyRental = monthlyRental;
-            this._toatalDiscount = 0;
+            this._discountPercentageOfPackageB = 40;
+            this._discountPercentageOfPackageD = 0;
         }
 
         public override void CalculateTheBill()
@@ -79,10 +75,50 @@ namespace MobileBilling
                         }
                     }
                 }
+
+                this._allSpecialOffersFromThePackage = CalculatePackageOffer(cdr);
             }
 
-            this._tax = (this._totalCallCharges + this._monthlyRental) * taxPercentage / 100;
-            billAmount =Math.Round((this._totalCallCharges + this._monthlyRental + this._tax - this._toatalDiscount), 2);
+            this._tax = (this._totalCallCharges + this._monthlyRental - this._allSpecialOffersFromThePackage) * taxPercentage / 100;
+            this._toatalDiscount = CalculateDiscountForTheSpecificPackage();
+            billAmount = Math.Round((this._totalCallCharges + this._monthlyRental + this._tax - this._toatalDiscount - this._allSpecialOffersFromThePackage), 2);
+        }
+
+        private double CalculatePackageOffer(CDR cdr)
+        {
+            bool itIsALocalCall = ((int)(cdr.calledPartyNumber / 10000000) == (int)(cdr.callingPartyNumber / 10000000));
+            bool itIsALongDistanceCall = ((int)(cdr.calledPartyNumber / 10000000) != (int)(cdr.callingPartyNumber / 10000000));
+
+            bool inOffPeakTime = (((cdr.startingTimeOfTheCall.Hour < startingHourOfPeakTime) && (cdr.startingTimeOfTheCall.Hour >= 0)) || ((cdr.startingTimeOfTheCall.Hour >= startingHourOfOffPeakTime) && (cdr.startingTimeOfTheCall.Hour <= 24)));
+            bool inPeakTime = ((cdr.startingTimeOfTheCall.Hour >= startingHourOfPeakTime) && (cdr.startingTimeOfTheCall.Hour < startingHourOfOffPeakTime));
+
+            double packageOffer = 0;
+
+            if (customer.packageCode == 'B' && itIsALocalCall && inOffPeakTime)
+            {
+                    packageOffer = this._offPeakHoursLocalPerSecondCharge;
+            }
+
+            return packageOffer;
+        }
+
+        private double CalculateDiscountForTheSpecificPackage()
+        {
+            double packageDiscount = 0;
+
+            if (customer.packageCode == 'B')
+            {
+                if (this._totalCallCharges > 1000)
+                {
+                    packageDiscount = this._totalCallCharges * this._discountPercentageOfPackageB / 100;
+                }
+            }
+            else if (customer.packageCode == 'D')
+            {
+                    packageDiscount = this._totalCallCharges * this._discountPercentageOfPackageD / 100;
+            }
+ 
+            return packageDiscount;
         }
     }
 }

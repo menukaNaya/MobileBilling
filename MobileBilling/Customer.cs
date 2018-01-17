@@ -9,6 +9,7 @@ namespace MobileBilling
         private string _billingAddress;
         private char _packageCode;
         private DateTime _registeredDate;
+        
 
         public Customer(string fullName, long phoneNumber, string billingAddress, DateTime registeredDate, char packageCode)
         {
