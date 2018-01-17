@@ -22,13 +22,6 @@ namespace MobileBilling
             this._startingHourOfOffPeakTime = startingHourOfOffPeakTime;
             this._listOfCallDetails = new List<CDR>();
         }
-        //public Bill(Customer customer, Package customerPackage)
-        //{
-        //    this._customer = customer;
-        //    this._customerPackage = customerPackage;
-        //    this._taxPercentage = 20;
-        //    this._listOfCallDetails = new List<CDR>();
-        //}
 
         public virtual void CalculateTheBill()
         {

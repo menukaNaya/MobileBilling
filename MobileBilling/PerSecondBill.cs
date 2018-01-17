@@ -120,5 +120,17 @@ namespace MobileBilling
  
             return packageDiscount;
         }
+
+        public double discountPercentageOfPackageB
+        {
+            get { return _discountPercentageOfPackageB; }
+            set { _discountPercentageOfPackageB = value; }
+        }
+
+        public double discountPercentageOfPackageD
+        {
+            get { return _discountPercentageOfPackageD; }
+            set { _discountPercentageOfPackageD = value; }
+        }
     }
 }
